@@ -12,11 +12,11 @@ public class MockFlightDataSource implements FlightDataSource {
 
     MockAirportDataSource airports = new MockAirportDataSource();
     private final List<Flight> flights = new ArrayList<>(Arrays.asList(
-            new Flight(UUID.randomUUID(), airports.retrieveAirports().get(0) , airports.retrieveAirports().get(2), LocalDateTime.of(2024, 12, 12,11,30), LocalDateTime.of(2024, 12, 12,16,30), 250.00),
-            new Flight(UUID.randomUUID(), airports.retrieveAirports().get(1), airports.retrieveAirports().get(0), LocalDateTime.of(2024, 11, 23,11,30), LocalDateTime.of(2024, 11, 23,16,30), 300.00),
+            new Flight(UUID.randomUUID(), airports.retrieveAirports().getFirst() , airports.retrieveAirports().get(2), LocalDateTime.of(2024, 12, 12,11,30), LocalDateTime.of(2024, 12, 12,16,30), 250.00),
+            new Flight(UUID.randomUUID(), airports.retrieveAirports().get(1), airports.retrieveAirports().getFirst(), LocalDateTime.of(2024, 11, 23,11,30), LocalDateTime.of(2024, 11, 23,16,30), 300.00),
             new Flight(UUID.randomUUID(), airports.retrieveAirports().get(2), airports.retrieveAirports().get(1), LocalDateTime.of(2024, 12, 12,11,30), LocalDateTime.of(2024, 12, 12,16,30), 550.00),
-            new Flight(UUID.randomUUID(), airports.retrieveAirports().get(0) , airports.retrieveAirports().get(2), LocalDateTime.of(2025, 12, 12,11,30), 250.00),
-            new Flight(UUID.randomUUID(), airports.retrieveAirports().get(1), airports.retrieveAirports().get(0), LocalDateTime.of(2026, 11, 23,11,30), 300.00),
+            new Flight(UUID.randomUUID(), airports.retrieveAirports().getFirst() , airports.retrieveAirports().get(2), LocalDateTime.of(2025, 12, 12,11,30), 250.00),
+            new Flight(UUID.randomUUID(), airports.retrieveAirports().get(1), airports.retrieveAirports().getFirst(), LocalDateTime.of(2026, 11, 23,11,30), 300.00),
             new Flight(UUID.randomUUID(), airports.retrieveAirports().get(2), airports.retrieveAirports().get(1), LocalDateTime.of(2027, 12, 12,11,30), 550.00)
     ));
 
@@ -37,7 +37,7 @@ public class MockFlightDataSource implements FlightDataSource {
     @Override
     public Flight createFlight(Flight newFlight) {
         for (Flight flight : flights) {
-            if (flight.getId() == newFlight.getId()) {
+            if (flight.getId().equals(newFlight.getId())) {
                 throw new IllegalArgumentException("Flight with id " + newFlight.getId() + " already exists");
             }
         }
@@ -49,7 +49,7 @@ public class MockFlightDataSource implements FlightDataSource {
     public void deleteFlight(UUID id) {
         Flight currentFlight = null;
         for (Flight flight : flights) {
-            if (flight.getId() == id) {
+            if (flight.getId().equals(id)) {
                 currentFlight = flight;
                 break;
             }
@@ -64,7 +64,7 @@ public class MockFlightDataSource implements FlightDataSource {
     public Flight updateFlight(Flight newFlight) {
         Flight currentFlight = null;
         for (Flight flight : flights) {
-            if (flight.getId() == newFlight.getId()) {
+            if (flight.getId().equals(newFlight.getId())) {
                 currentFlight = flight;
                 break;
             }

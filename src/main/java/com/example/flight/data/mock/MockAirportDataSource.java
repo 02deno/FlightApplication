@@ -4,7 +4,6 @@ import com.example.flight.data.AirportDataSource;
 import com.example.flight.model.Airport;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 @Repository
@@ -26,7 +25,7 @@ public class MockAirportDataSource implements AirportDataSource {
     @Override
     public Airport retrieveAirport(UUID id) {
         for (Airport airport : airports) {
-            if (airport.getId() == id) {
+            if (airport.getId().equals(id)) {
                 System.out.println("Airport retrieved: " + airport);
                 return airport;
             }
@@ -37,7 +36,7 @@ public class MockAirportDataSource implements AirportDataSource {
     @Override
     public Airport createAirport(Airport newAirport) {
         for (Airport airport : airports) {
-            if (airport.getId() == newAirport.getId()) {
+            if (airport.getId().equals(newAirport.getId())) {
                 throw new IllegalArgumentException("Airport with id " + newAirport.getId() + " already exists");
             }
         }
@@ -49,7 +48,7 @@ public class MockAirportDataSource implements AirportDataSource {
     public void deleteAirport(UUID id) {
         Airport currentAirport = null;
         for (Airport airport : airports) {
-            if (airport.getId() == id) {
+            if (airport.getId().equals(id)) {
                 currentAirport = airport;
                 break;
             }
@@ -64,7 +63,7 @@ public class MockAirportDataSource implements AirportDataSource {
     public Airport updateAirport(Airport newAirport) {
         Airport currentAirport = null;
         for (Airport airport : airports) {
-            if (airport.getId() == newAirport.getId()) {
+            if (airport.getId().equals(newAirport.getId())) {
                 currentAirport = airport;
                 break;
             }
