@@ -55,7 +55,7 @@ public class MockFlightDataSource implements FlightDataSource {
             }
         }
         if (currentFlight == null) {
-            throw new NoSuchElementException("Could not find a Airport with id " + id);
+            throw new NoSuchElementException("Could not find a Flight with id " + id);
         }
         flights.remove(currentFlight);
     }

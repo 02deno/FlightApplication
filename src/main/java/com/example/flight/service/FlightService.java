@@ -4,7 +4,6 @@ import com.example.flight.data.FlightDataSource;
 import com.example.flight.model.Flight;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
