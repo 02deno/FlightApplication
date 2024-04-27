@@ -1,37 +1,46 @@
 package com.example.flight.service;
 
-import com.example.flight.data.FlightDataSource;
+import com.example.flight.data.FlightDatabase;
 import com.example.flight.model.Flight;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FlightService {
-    private final FlightDataSource dataSource;
-
-    public FlightService(FlightDataSource dataSource) {
+    private final FlightDatabase dataSource;
+    public FlightService(FlightDatabase dataSource) {
         this.dataSource = dataSource;
     }
 
     public List<Flight> getFlights() {
-        return dataSource.retrieveFlights();
+        return dataSource.findAll();
     }
 
-    public Flight getFlight(UUID id) {
-        return dataSource.retrieveFlight(id);
+    public Optional<Flight> getFlight(UUID id) {
+        return dataSource.findById(id);
     }
 
     public Flight addFlight(Flight flight) {
-        return dataSource.createFlight(flight);
+        return dataSource.save(flight);
     }
 
     public void deleteFlight(UUID id) {
-        dataSource.deleteFlight(id);
+        dataSource.deleteById(id);
     }
 
-    public Flight updateFlight(Flight flight) {
-        return dataSource.updateFlight(flight);
+    public void updateFlight(Flight flight) {
+        Optional<Flight> optionalFlight = dataSource.findById(flight.getId());
+        if (optionalFlight.isPresent()) {
+            // Modify the fields of the entity object
+            Flight newFlight = optionalFlight.get();
+            newFlight.setArrivalAirport(flight.getArrivalAirport());
+            newFlight.setDepartureAirport(flight.getDepartureAirport());
+            newFlight.setPrice(flight.getPrice());
+            newFlight.setDepartureDate(flight.getDepartureDate());
+            newFlight.setReturnDate(flight.getReturnDate());
+            // Save the entity
+            dataSource.save(newFlight);
+        }
     }
 }

@@ -1,37 +1,57 @@
 package com.example.flight.service;
 
-import com.example.flight.data.AirportDataSource;
+import com.example.flight.data.AirportDatabase;
 import com.example.flight.model.Airport;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AirportService {
-    private final AirportDataSource dataSource;
 
-    public AirportService(AirportDataSource dataSource) {
+    private final AirportDatabase dataSource;
+
+    public AirportService(AirportDatabase dataSource) {
+
         this.dataSource = dataSource;
+
+//        List<Airport> airports = new ArrayList<>(Arrays.asList(
+//                new Airport(UUID.randomUUID(), "Istanbul", "Sabiha Gokcen", "SAW"),
+//                new Airport(UUID.randomUUID(), "Istanbul", "Turk Hava Yollari", "THY"),
+//                new Airport(UUID.randomUUID(), "Izmir", "Izmir Hava Yollari", "IHY"),
+//                new Airport(UUID.randomUUID(), "Ankara", "Ankara Hava Yollari", "AHY"),
+//                new Airport(UUID.randomUUID(), "Sivas", "Sivas Hava Yollari", "SHY"),
+//                new Airport(UUID.randomUUID(), "Trabzon", "Trabzon Hava Yollari", "THY")
+//        ));
+//        dataSource.saveAll(airports);
+
     }
 
     public List<Airport> getAirports() {
-        return dataSource.retrieveAirports();
+        return dataSource.findAll();
     }
 
-    public Airport getAirport(UUID id) {
-        return dataSource.retrieveAirport(id);
+    public Optional<Airport> getAirport(UUID id) {
+        return dataSource.findById(id);
     }
 
     public Airport addAirport(Airport airport) {
-        return dataSource.createAirport(airport);
+        return dataSource.save(airport);
     }
 
-    public void deleteAirport(UUID id) {
-        dataSource.deleteAirport(id);
+    public void deleteAirport(UUID id) {dataSource.deleteById(id);
     }
 
-    public Airport updateAirport(Airport airport) {
-        return dataSource.updateAirport(airport);
+    public void updateAirport(Airport airport) {
+        Optional<Airport> optionalAirport = dataSource.findById(airport.getId());
+        if (optionalAirport.isPresent()) {
+            // Modify the fields of the entity object
+            Airport newAirport = optionalAirport.get();
+            newAirport.setAbbreviation(airport.getAbbreviation());
+            newAirport.setCity(airport.getCity());
+            newAirport.setName(airport.getName());
+            // Save the entity
+            dataSource.save(newAirport);
+        }
     }
 }

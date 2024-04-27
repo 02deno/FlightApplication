@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -26,7 +27,7 @@ public class AirportController {
     }
 
     @GetMapping("/getAirportID_{id}")
-    public Airport getAirport(@PathVariable UUID id) {
+    public Optional<Airport> getAirport(@PathVariable UUID id) {
         return service.getAirport(id);
     }
 
@@ -43,8 +44,8 @@ public class AirportController {
     }
 
     @PatchMapping("/updateAirport")
-    public Airport updateAirport(@RequestBody Airport airport) {
-        return service.updateAirport(airport);
+    public void updateAirport(@RequestBody Airport airport) {
+        service.updateAirport(airport);
     }
 
     @ExceptionHandler(NoSuchElementException.class)

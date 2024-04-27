@@ -1,13 +1,12 @@
 package com.example.flight.controller;
 
-import com.example.flight.model.Airport;
 import com.example.flight.model.Flight;
 import com.example.flight.service.FlightService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -26,7 +25,7 @@ public class FlightController {
     }
 
     @GetMapping("/getFlightID_{id}")
-    public Flight getFlight(@PathVariable UUID id) {
+    public Optional<Flight> getFlight(@PathVariable UUID id) {
         return service.getFlight(id);
     }
 
@@ -43,8 +42,8 @@ public class FlightController {
     }
 
     @PatchMapping("/updateFlight")
-    public Flight updateAdmin(@RequestBody Flight flight) {
-        return service.updateFlight(flight);
+    public void updateAdmin(@RequestBody Flight flight) {
+        service.updateFlight(flight);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
@@ -61,21 +60,22 @@ public class FlightController {
     public List<Flight> getFlights(
             @RequestParam String departureAirport,
             @RequestParam String arrivalAirport,
-            @RequestParam LocalDateTime departureDate,
-            @RequestParam(required = false) LocalDateTime returnDate) {
+            @RequestParam LocalDate departureDate,
+            @RequestParam(required = false) LocalDate returnDate) {
 
         List<Flight>mockFlights = service.getFlights();
         List<Flight> flights = new ArrayList<>();
 
-        // Tek yönlü uçuş
         for (Flight flight : mockFlights) {
             if (flight.getDepartureAirport().getAbbreviation().equals(departureAirport) &&
                     flight.getArrivalAirport().getAbbreviation().equals(arrivalAirport) &&
-                    flight.getDepartureDate().equals(departureDate)) {
+                    flight.getDepartureDate().toLocalDate().equals(departureDate)) {
                 if(returnDate == null) {
+                    // Tek yönlü uçuş
                     flights.add(new Flight(flight.getId(), flight.getDepartureAirport(), flight.getArrivalAirport(),flight.getDepartureDate(), flight.getPrice()));
                 }else {
-                    if(flight.getReturnDate().equals(returnDate)){
+                    // Cift yönlü uçuş
+                    if(flight.getReturnDate().toLocalDate().equals(returnDate)){
                         flights.add(new Flight(flight.getId(), flight.getDepartureAirport(), flight.getArrivalAirport(),flight.getDepartureDate(), flight.getPrice()));
                         flights.add(new Flight(flight.getId(), flight.getArrivalAirport(), flight.getDepartureAirport(),flight.getReturnDate(), flight.getPrice()));
                     }
