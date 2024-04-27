@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -27,11 +26,11 @@ public class Flight {
     private UUID id;
 
     @OneToOne
-    @JoinColumn(name = "departureAirport_id", nullable = false)
+    @JoinColumn(name = "departure_airport_id", nullable = false)
     private Airport departureAirport;
 
     @OneToOne
-    @JoinColumn(name = "arrivalAirport_id", nullable = false)
+    @JoinColumn(name = "arrival_airport_id", nullable = false)
     private Airport arrivalAirport;
 
     private LocalDateTime departureDate;

@@ -1,6 +1,5 @@
 package com.example.flight.controller;
 
-import com.example.flight.model.Airport;
 import com.example.flight.model.Flight;
 import com.example.flight.service.FlightService;
 import org.springframework.http.HttpStatus;
@@ -8,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
