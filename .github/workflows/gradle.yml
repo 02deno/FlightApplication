@@ -4,7 +4,6 @@
 # documentation.
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: Java CI with Gradle
 
 on:
@@ -14,14 +13,24 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  build-and-test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: flightApp
+          POSTGRES_PASSWORD: Asko123
+          POSTGRES_DB: flightApp
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
@@ -32,9 +41,18 @@ jobs:
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-
-    - name: Build with Gradle Wrapper
+      
+    - name: Build with Gradle
       run: ./gradlew build
+
+    - name: Run Tests
+      env:
+        DATABASE_URL: jdbc:postgresql://localhost:5432/flightApp
+        DATABASE_USERNAME: flightApp
+        DATABASE_PASSWORD: Asko123
+      run: ./gradlew test
+
+
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
